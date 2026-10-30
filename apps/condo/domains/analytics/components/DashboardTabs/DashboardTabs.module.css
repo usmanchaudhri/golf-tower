@@ -1,0 +1,136 @@
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--condo-global-color-gray-3, #e1e5ed);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table th {
+  color: var(--condo-global-color-gray-7, #707695);
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.table td {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.table tbody tr {
+  cursor: pointer;
+}
+
+.table-static tbody tr {
+  cursor: default;
+}
+
+.table tbody tr:hover,
+.table tbody tr.active,
+.active {
+  background-color: var(--condo-global-color-teal-1, #e9f3f2);
+}
+
+.pill {
+  display: inline-flex;
+  padding: 2px 8px;
+  color: var(--condo-global-color-teal-7, #135754);
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+  background-color: var(--condo-global-color-teal-1, #e9f3f2);
+  border-radius: 99px;
+}
+
+.pill-owner {
+  color: var(--condo-global-color-green-7, #00b538);
+  background-color: var(--condo-global-color-green-1, #ebfaef);
+}
+
+.pill-tenant {
+  color: var(--condo-global-color-blue-7, #0b78d2);
+  background-color: var(--condo-global-color-blue-1, #e7f4ff);
+}
+
+.pill-vacant,
+.pill-visitor {
+  color: var(--condo-global-color-gray-7, #707695);
+  background-color: var(--condo-global-color-gray-1, #f2f4f6);
+}
+
+.pill-assigned {
+  color: var(--condo-global-color-teal-7, #135754);
+  background-color: var(--condo-global-color-teal-1, #e9f3f2);
+}
+
+.pill-paid,
+.pill-on {
+  color: var(--condo-global-color-green-7, #00b538);
+  background-color: var(--condo-global-color-green-1, #ebfaef);
+}
+
+.pill-pending {
+  color: var(--condo-global-color-orange-7, #da7f00);
+  background-color: var(--condo-global-color-orange-1, #fff4e5);
+}
+
+.pill-failed {
+  color: var(--condo-global-color-red-7, #eb3468);
+  background-color: var(--condo-global-color-red-1, #fff0f3);
+}
+
+.pill-off {
+  color: var(--condo-global-color-gray-7, #707695);
+  background-color: var(--condo-global-color-gray-1, #f2f4f6);
+}
+
+.pill-auto {
+  margin-left: 6px;
+  color: var(--condo-global-color-teal-7, #135754);
+  background-color: var(--condo-global-color-teal-1, #e9f3f2);
+}
+
+.warn {
+  color: var(--condo-global-color-orange-7, #da7f00);
+  font-weight: 600;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.search {
+  width: min(100%, 280px);
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detail-row {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}

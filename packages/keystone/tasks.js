@@ -74,6 +74,11 @@ function createTaskQueue (name) {
             if (['bclient', 'subscriber'].includes(type)) {
                 opts.maxRetriesPerRequest = null
             }
+            // Bull defaults host/port/db to 127.0.0.1:6379/0, and ioredis lets those
+            // override REDIS_URL. Drop them so the configured URL stays in effect.
+            delete opts.host
+            delete opts.port
+            delete opts.db
             return getKVClient(`worker:${name}`, type, { kvOptions: opts, ignorePrefix: true })
         },
     }))

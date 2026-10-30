@@ -1,0 +1,247 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.kpi-grid-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.kpi {
+  height: 100%;
+}
+
+.kpi :global(.condo-card),
+.module-link :global(.condo-card),
+.split :global(.condo-card),
+.stack :global(.condo-card) {
+  overflow: hidden;
+  background: var(--condo-global-color-white);
+  border-color: var(--condo-global-color-gray-3, #e1e5ed);
+  border-radius: 16px;
+}
+
+.kpi :global(h2.condo-typography) {
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi :global(.condo-typography-primary) {
+  color: var(--condo-global-color-teal-7, #135754);
+}
+
+.kpi-warn :global(.condo-typography-primary) {
+  color: var(--condo-global-color-orange-7, #da7f00);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.chart {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  height: 200px;
+  padding-top: 8px;
+}
+
+.chart-col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  height: 100%;
+}
+
+.bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+}
+
+.bar {
+  flex: 1;
+  min-height: 0;
+  border-radius: 6px 6px 2px 2px;
+}
+
+.bar-income {
+  background-color: var(--condo-global-color-teal-5, #1c7e79);
+}
+
+.bar-expense {
+  background-color: var(--condo-global-color-gray-5, #d0d3e5);
+}
+
+.chart-label {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--condo-global-color-gray-7, #707695);
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.legend-item {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.swatch-income {
+  background-color: var(--condo-global-color-teal-5, #1c7e79);
+}
+
+.swatch-expense {
+  background-color: var(--condo-global-color-gray-5, #d0d3e5);
+}
+
+.opex-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.opex-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  align-items: center;
+}
+
+.opex-track {
+  grid-column: 1 / -1;
+  height: 6px;
+  overflow: hidden;
+  background-color: var(--condo-global-color-gray-3, #e1e5ed);
+  border-radius: 99px;
+}
+
+.opex-fill {
+  height: 100%;
+  border-radius: 99px;
+}
+
+.opex-amount {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ops-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.module-link {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.module-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.module-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--condo-global-color-teal-7, #135754);
+  background-color: var(--condo-global-color-teal-1, #e9f3f2);
+  border-radius: 10px;
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  justify-content: space-between;
+}
+
+.balance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.balance-table th,
+.balance-table td {
+  padding: 10px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--condo-global-color-gray-3, #e1e5ed);
+}
+
+.balance-table th:not(:first-child),
+.balance-table td:not(:first-child) {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.balance-table tr:last-child th,
+.balance-table tr:last-child td {
+  border-bottom: none;
+}
+
+.alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-title :global(h2.condo-typography) {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 992px) {
+  .ops-grid,
+  .kpi-grid-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .split,
+  .ops-grid,
+  .kpi-grid-four {
+    grid-template-columns: 1fr;
+  }
+}

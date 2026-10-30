@@ -46,6 +46,7 @@ import YandexMetrika from '@condo/domains/common/components/containers/YandexMet
 import { HCaptchaProvider } from '@condo/domains/common/components/HCaptcha'
 import { LayoutContextProvider } from '@condo/domains/common/components/LayoutContext'
 import { Loader } from '@condo/domains/common/components/Loader'
+import { MenuDropdown, type MenuDropdownChild } from '@condo/domains/common/components/MenuDropdown'
 import { MenuItem } from '@condo/domains/common/components/MenuItem'
 import PopupSmart from '@condo/domains/common/components/PopupSmart'
 import { PostMessageProvider } from '@condo/domains/common/components/PostMessageProvider'
@@ -156,10 +157,44 @@ interface IMenuItemData {
     label: string
     access?: boolean
     excludePaths?: Array<RegExp>
+    flat?: boolean
+}
+
+const CREATE_MENU_ITEMS: Record<string, MenuDropdownChild> = {
+    ticket: { id: 'menu-item-ticket-create', path: '/ticket/create', label: 'CreateTicket' },
+    incident: { id: 'menu-item-incident-create', path: '/incident/create', label: 'menu.item.createIncident' },
+    news: { id: 'menu-item-news-create', path: '/news/create', label: 'menu.item.createNews' },
+    property: { id: 'menu-item-property-create', path: '/property/create', label: 'pages.condo.property.index.CreatePropertyTitle' },
+    contact: { id: 'menu-item-contact-create', path: '/contact/create', label: 'menu.item.createContact' },
+    employee: { id: 'menu-item-employee-create', path: '/employee/create', label: 'menu.item.createEmployee' },
+    marketplace: { id: 'menu-item-marketplace-create', path: '/marketplace/marketItem/create', label: 'menu.item.createMarketItem' },
+    meter: { id: 'menu-item-meter-create', path: '/meter/create', label: 'CreateMeterReading' },
 }
 
 function checkItemAccess (item: IMenuItemData): boolean {
     return !('access' in item) || item.access
+}
+
+function getDropdownItems (item: IMenuItemData, extraItems: Array<MenuDropdownChild> = []): Array<MenuDropdownChild> {
+    const items: Array<MenuDropdownChild> = [{
+        id: `${item.id}-list`,
+        path: `/${item.path}`,
+        label: item.label,
+        excludePaths: item.excludePaths,
+    }]
+
+    if (CREATE_MENU_ITEMS[item.path]) {
+        items.push(CREATE_MENU_ITEMS[item.path])
+    }
+
+    if (item.path === 'settings') {
+        items.push(
+            { id: 'menu-item-settings-roles', path: '/settings?tab=employeeRoles', label: 'EmployeeRoles' },
+            { id: 'menu-item-settings-contact-roles', path: '/settings?tab=contactRoles', label: 'ContactRoles' },
+        )
+    }
+
+    return [...items, ...extraItems]
 }
 
 interface IMenuCategoryData {
@@ -222,6 +257,62 @@ const MenuItems: React.FC = () => {
 
     const menuCategoriesData = useMemo<Array<IMenuCategoryData>>(() => ([
         {
+            key: DASHBOARD_CATEGORY,
+            items: [
+                {
+                    id: 'menu-item-dashboard',
+                    path: 'dashboard',
+                    icon: AllIcons['Home'],
+                    label: 'global.section.dashboard',
+                    access: isManagingCompany,
+                    flat: true,
+                    excludePaths: [/^\/dashboard\/(units|bank|payments|parking|accounts)/],
+                },
+                {
+                    id: 'menu-item-units',
+                    path: 'dashboard/units',
+                    icon: AllIcons['Contacts'],
+                    label: 'global.section.unitsAndUsers',
+                    access: isManagingCompany,
+                },
+                {
+                    id: 'menu-item-bank',
+                    path: 'dashboard/bank',
+                    icon: AllIcons['Wallet'],
+                    label: 'global.section.bankAndCash',
+                    access: isManagingCompany,
+                },
+                {
+                    id: 'menu-item-payments',
+                    path: 'dashboard/payments',
+                    icon: AllIcons['CreditCard'],
+                    label: 'global.section.payments',
+                    access: isManagingCompany,
+                },
+                {
+                    id: 'menu-item-parking',
+                    path: 'dashboard/parking',
+                    icon: AllIcons['Parking'],
+                    label: 'global.section.parkingManager',
+                    access: isManagingCompany,
+                },
+                {
+                    id: 'menu-item-accounts',
+                    path: 'dashboard/accounts',
+                    icon: AllIcons['Bill'],
+                    label: 'global.section.accounts',
+                    access: isManagingCompany,
+                },
+                {
+                    id: 'menu-item-reports',
+                    path: 'reports',
+                    icon: AllIcons['BarChartVertical'],
+                    label: 'global.section.analytics',
+                    access: hasAccessToAnalytics && isManagingCompany,
+                },
+            ].filter(checkItemAccess),
+        },
+        {
             key: TOUR_CATEGORY,
             items: [
                 {
@@ -230,18 +321,6 @@ const MenuItems: React.FC = () => {
                     icon: AllIcons['Guide'],
                     label: 'global.section.tour',
                     access: hasAccessToTour && isManagingCompany,
-                },
-            ].filter(checkItemAccess),
-        },
-        {
-            key: DASHBOARD_CATEGORY,
-            items: [
-                {
-                    id: 'menu-item-reports',
-                    path: 'reports',
-                    icon: AllIcons['BarChartVertical'],
-                    label: 'global.section.analytics',
-                    access: hasAccessToAnalytics && isManagingCompany,
                 },
             ].filter(checkItemAccess),
         },
@@ -393,16 +472,32 @@ const MenuItems: React.FC = () => {
                             <NoSubscriptionTooltip path={`/${item.path}`} children={element} placement={placement} />
                         )
 
+                        if (item.flat) {
+                            return (
+                                <MenuItem
+                                    id={item.id || `menu-item-${item.path}`}
+                                    key={`menu-item-${item.path}`}
+                                    path={`/${item.path}`}
+                                    icon={item.icon}
+                                    label={item.label}
+                                    disabled={isDisabled}
+                                    isCollapsed={isCollapsed}
+                                    excludePaths={item.excludePaths}
+                                    onDark
+                                    toolTipDecorator={featureTooltip}
+                                />
+                            )
+                        }
+
                         return (
-                            <MenuItem
-                                id={item.id}
+                            <MenuDropdown
+                                id={item.id || `menu-item-${item.path}`}
                                 key={`menu-item-${item.path}`}
-                                path={`/${item.path}`}
                                 icon={item.icon}
                                 label={item.label}
                                 disabled={isDisabled}
                                 isCollapsed={isCollapsed}
-                                excludePaths={item.excludePaths}
+                                items={getDropdownItems(item)}
                                 toolTipDecorator={featureTooltip}
                             />
                         )
@@ -426,18 +521,25 @@ const MenuItems: React.FC = () => {
 
                         if (hidePaidFeatures && !isAppAvailable) return null
 
-                        return <MenuItem
-                            id={`menu-item-app-${app.id}`}
-                            key={`menu-item-app-${app.id}`}
-                            path={`/miniapps/${app.id}`}
-                            icon={AllIcons?.[app.icon] || AllIcons['QuestionCircle']}
-                            label={app.name}
-                            labelRaw
-                            disabled={disabled}
-                            isCollapsed={isCollapsed}
-                            toolTipDecorator={tooltipDecorator}
-                            excludePaths={[miniAppsPattern]}
-                        />
+                        return (
+                            <MenuDropdown
+                                id={`menu-item-app-${app.id}`}
+                                key={`menu-item-app-${app.id}`}
+                                icon={AllIcons?.[app.icon] || AllIcons['QuestionCircle']}
+                                label={app.name}
+                                labelRaw
+                                disabled={disabled}
+                                isCollapsed={isCollapsed}
+                                toolTipDecorator={tooltipDecorator}
+                                items={[{
+                                    id: `menu-item-app-${app.id}-open`,
+                                    path: `/miniapps/${app.id}`,
+                                    label: app.name,
+                                    labelRaw: true,
+                                    excludePaths: [miniAppsPattern],
+                                }]}
+                            />
+                        )
                     })}
                 </Fragment>
             ))}

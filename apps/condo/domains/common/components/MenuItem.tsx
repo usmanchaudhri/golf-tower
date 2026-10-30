@@ -34,6 +34,9 @@ interface IMenuItemProps {
     onClick?: () => void
     excludePaths?: Array<RegExp>
     tooltip?: React.ReactNode
+    extra?: React.ReactNode
+    onDark?: boolean
+    isSubmenu?: boolean
 
     toolTipDecorator? (params: INoOrganizationToolTipWrapper): JSX.Element
 }
@@ -59,6 +62,9 @@ export const MenuItem: React.FC<IMenuItemProps> = (props) => {
         excludePaths = [],
         labelRaw,
         tooltip,
+        extra,
+        onDark,
+        isSubmenu,
     } = props
     const router = useRouter()
     const asPath = router.asPath
@@ -90,9 +96,9 @@ export const MenuItem: React.FC<IMenuItemProps> = (props) => {
         ? label
         : intl.formatMessage({ id: label as FormatjsIntl.Message['ids'] })
 
-    const linkContent = (
+    const titleAndIcon = (
         <Space size={12} align='center' direction='horizontal' className={styles.menuItem}>
-            {Icon && <Icon size='medium' />}
+            {Icon && <Icon size='large' />}
             {!isCollapsed && (<div>
                 <Typography.Title ellipsis={{ rows: 2 }} level={5}>
                     {Message}
@@ -101,6 +107,13 @@ export const MenuItem: React.FC<IMenuItemProps> = (props) => {
         </Space>
     )
 
+    const linkContent = extra && !isCollapsed ? (
+        <div className={styles.menuItemWithExtra}>
+            {titleAndIcon}
+            <span className={styles.menuItemExtra}>{extra}</span>
+        </div>
+    ) : titleAndIcon
+
     const menuItemIdProp = id ? { id: id } : {}
 
     const menuItemClassName = classnames(
@@ -108,6 +121,8 @@ export const MenuItem: React.FC<IMenuItemProps> = (props) => {
         {
             [styles.active]: isActive,
             [styles.disabled]: disabled,
+            [styles.onDark]: onDark,
+            [styles.submenu]: isSubmenu,
         },
         wrapperClassName,
     )

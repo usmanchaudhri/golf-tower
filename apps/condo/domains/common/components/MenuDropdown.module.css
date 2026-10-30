@@ -1,0 +1,16 @@
+.dropdown {
+  width: 100%;
+}
+
+.children {
+  margin: 0 0 8px;
+  padding: 0 0 4px 12px;
+}
+
+.child {
+  padding: 4px 0;
+}
+
+.collapsed-trigger {
+  width: 100%;
+}

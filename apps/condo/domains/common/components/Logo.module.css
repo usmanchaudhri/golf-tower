@@ -1,0 +1,59 @@
+.logo {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  height: 52px;
+  cursor: pointer;
+}
+
+.mark {
+  display: grid;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  color: #c6a15b;
+  font-weight: 600;
+  font-size: 22px;
+  font-family: Georgia, 'Times New Roman', serif;
+  background: #0f4a44;
+  border-radius: 14px;
+  place-items: center;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.brand-title {
+  color: var(--condo-global-color-black);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.brand-subtitle {
+  color: var(--condo-global-color-gray-7);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+:global(.desktop-menu) .mark {
+  color: #c6a15b;
+  background: #0a322e;
+  box-shadow: 0 0 0 1px rgb(198 161 91 / 28%);
+}
+
+:global(.desktop-menu) .brand-title {
+  color: var(--condo-global-color-white);
+}
+
+:global(.desktop-menu) .brand-subtitle {
+  color: rgb(198 161 91 / 86%);
+}

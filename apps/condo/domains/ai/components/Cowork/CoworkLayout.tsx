@@ -80,6 +80,7 @@ const CoworkSideMenu: React.FC = () => {
                 icon={PlusCircle}
                 label='ai.cowork.newChat'
                 isCollapsed={isCollapsed}
+                onDark
                 onClick={() => void Router.push('/ai-engineer/chat')}
             />
             {pinnedChats.length > 0 && (
@@ -91,6 +92,7 @@ const CoworkSideMenu: React.FC = () => {
                         label={makeSectionLabel(pinnedChatsLabel, pinnedOpen, isCollapsed)}
                         labelRaw
                         isCollapsed={isCollapsed}
+                        onDark
                         menuItemWrapperProps={{ className: styles['section-menu-item'] }}
                         onClick={isCollapsed ? toggleCollapsed : togglePinned}
                     />
@@ -104,6 +106,7 @@ const CoworkSideMenu: React.FC = () => {
                                 labelRaw
                                 tooltip={chat.name}
                                 isCollapsed={isCollapsed}
+                                onDark
                                 icon={FakeIcon}
                                 menuItemWrapperProps={{ className: styles['chat-menu-item'] }}
                             />
@@ -120,6 +123,7 @@ const CoworkSideMenu: React.FC = () => {
                         label={makeSectionLabel(chatsLabel, chatsOpen, isCollapsed)}
                         labelRaw
                         isCollapsed={isCollapsed}
+                        onDark
                         menuItemWrapperProps={{ className: styles['section-menu-item'] }}
                         onClick={isCollapsed ? toggleCollapsed : toggleChats}
                     />
@@ -133,6 +137,7 @@ const CoworkSideMenu: React.FC = () => {
                                 labelRaw
                                 tooltip={chat.name}
                                 isCollapsed={isCollapsed}
+                                onDark
                                 icon={FakeIcon}
                                 menuItemWrapperProps={{ className: styles['chat-menu-item'] }}
                             />
@@ -148,6 +153,7 @@ const CoworkSideMenu: React.FC = () => {
                     icon={Rocket}
                     label='ai.cowork.skills'
                     isCollapsed={isCollapsed}
+                    onDark
                 />
             )}
             {settingsEnabled && (
@@ -158,6 +164,7 @@ const CoworkSideMenu: React.FC = () => {
                     icon={Settings}
                     label='ai.cowork.settings'
                     isCollapsed={isCollapsed}
+                    onDark
                 />
             )}
             <MenuItem
@@ -167,6 +174,7 @@ const CoworkSideMenu: React.FC = () => {
                 icon={Services}
                 label='ai.cowork.myMiniapps'
                 isCollapsed={isCollapsed}
+                onDark
             />
         </div>
     )

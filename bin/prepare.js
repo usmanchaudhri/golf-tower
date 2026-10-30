@@ -18,8 +18,8 @@ const {
 
 const DEFAULT_DB_NAME_PREFIX = 'local'
 const DEFAULT_APP_HTTPS_SUBDOMAIN = 'app.localhost'
-const LOCAL_PG_DB_PREFIX = 'postgresql://postgres:postgres@127.0.0.1'
-const LOCAL_REDIS_DB_PREFIX = 'redis://127.0.0.1'
+const LOCAL_PG_DB_PREFIX = process.env.LOCAL_PG_DB_PREFIX || 'postgresql://postgres:postgres@127.0.0.1'
+const LOCAL_REDIS_DB_PREFIX = process.env.LOCAL_REDIS_DB_PREFIX || 'redis://127.0.0.1'
 const KEY_FILE = path.join(__filename, '..', '.ssl', 'localhost.key')
 const CERT_FILE = path.join(__filename, '..', '.ssl', 'localhost.pem')
 
