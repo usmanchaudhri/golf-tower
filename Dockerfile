@@ -26,7 +26,17 @@ RUN set -ex \
 FROM base AS pruner
 WORKDIR /src
 COPY --chown=app:app . /src
-RUN bash bin/prune.sh
+# yarn.lock lists @app/resident-app. The folder is absent when Railway clones
+# without that workspace (old gitlink / incomplete context), which makes
+# `yarn install --immutable` fail with YN0028.
+RUN set -eux \
+    && mkdir -p apps/resident-app \
+    && if [ ! -f apps/resident-app/package.json ]; then \
+         printf '%s\n' '{"name":"@app/resident-app","version":"0.0.0-development","private":true}' > apps/resident-app/package.json; \
+       fi \
+    && bash bin/prune.sh \
+    && test -f out/apps/resident-app/package.json \
+    && test -f out/yarn.lock
 
 # Installer
 FROM base AS installer
