@@ -1,0 +1,23 @@
+{
+  "name": "@app/resident-app",
+  "version": "0.0.0-development",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3010",
+    "build": "next build",
+    "build:deps": "echo skip",
+    "start": "next start -p 3010",
+    "test": "echo 'no tests'"
+  },
+  "dependencies": {
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

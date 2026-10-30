@@ -68,7 +68,7 @@ RUN echo "# Build time .env config!" >> /app/.env && \
 RUN chmod +x ./bin/run_condo_domain_tests.sh
 
 RUN set -ex \
-    && yarn build \
+    && yarn turbo run build --filter=@app/condo... \
     && rm -rf /app/out \
     && rm -rf /app/.env  \
     && rm -rf /app/.config /app/.cache /app/.docker  \
@@ -79,3 +79,5 @@ FROM base
 USER app:app
 WORKDIR /app
 COPY --from=builder --chown=app:app /app /app
+ENV NODE_ENV=production
+CMD ["yarn", "workspace", "@app/condo", "start"]
