@@ -22,20 +22,25 @@ RUN set -ex \
 	&& python3 -m pip install 'psycopg2-binary==2.9.10' && python3 -m pip install 'Django==5.2' \
     && echo "OK"
 
+# Collect yarn.lock + package.json without requiring a host-side `out/` (gitignored).
+FROM base AS pruner
+WORKDIR /src
+COPY --chown=app:app . /src
+RUN bash bin/prune.sh
+
 # Installer
 FROM base AS installer
 
 WORKDIR /app
-# Copy pruned monorepo (only package.json + yarn.lock)
-COPY --chown=app:app ./out /app
+COPY --from=pruner --chown=app:app /src/out /app
 # Copy yarn berry
 COPY --chown=app:app ./.yarn /app/.yarn
 COPY --chown=app:app ./.yarnrc.yml /app/.yarnrc.yml
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
+RUN --mount=type=cache,id=yarn,target=/usr/local/share/.cache/yarn \
     yarn install --immutable --inline-builds
 
 # Builder
-FROM base as builder
+FROM base AS builder
 
 ARG TURBO_TEAM
 ARG TURBO_TOKEN
@@ -63,8 +68,8 @@ RUN echo "# Build time .env config!" >> /app/.env && \
 
 RUN chmod +x ./bin/run_condo_domain_tests.sh
 
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
-    --mount=type=cache,target=/app/.turbo \
+RUN --mount=type=cache,id=yarn,target=/usr/local/share/.cache/yarn \
+    --mount=type=cache,id=turbo,target=/app/.turbo \
     set -ex \
     && yarn build \
     && rm -rf /app/out \
