@@ -31,7 +31,7 @@ COPY --chown=app:app ./out /app
 # Copy yarn berry
 COPY --chown=app:app ./.yarn /app/.yarn
 COPY --chown=app:app ./.yarnrc.yml /app/.yarnrc.yml
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
+RUN --mount=type=cache,id=s/2fa781b6-4525-4299-ab6f-057049ec8bf5-/usr/local/share/.cache/yarn,target=/usr/local/share/.cache/yarn \
     yarn install --immutable --inline-builds
 
 # Builder
@@ -63,8 +63,8 @@ RUN echo "# Build time .env config!" >> /app/.env && \
 
 RUN chmod +x ./bin/run_condo_domain_tests.sh
 
-RUN --mount=type=cache,target=/usr/local/share/.cache/yarn \
-    --mount=type=cache,target=/app/.turbo \
+RUN --mount=type=cache,id=s/2fa781b6-4525-4299-ab6f-057049ec8bf5-/usr/local/share/.cache/yarn,target=/usr/local/share/.cache/yarn \
+    --mount=type=cache,id=s/2fa781b6-4525-4299-ab6f-057049ec8bf5-/app/.turbo,target=/app/.turbo \
     set -ex \
     && yarn build \
     && rm -rf /app/out \
