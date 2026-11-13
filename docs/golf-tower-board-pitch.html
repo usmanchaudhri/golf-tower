@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Golf Tower | Switch from ADDA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,520;0,9..144,640;1,9..144,520&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --paper: #f6f3ee;
+            --white: #ffffff;
+            --ink: #1a2744;
+            --muted: #5a6880;
+            --line: #e4dfd6;
+            --teal: #1f4e8c;
+            --teal-deep: #16325f;
+            --mint: #e7eef8;
+            --sand: #f8f1e6;
+            --amber: #9a5b16;
+            --collected: #3b74e0;
+            --open: #e07a5f;
+            --shadow: 0 10px 28px rgba(22, 36, 64, 0.07);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            background: #e6e1d8;
+            color: var(--ink);
+            font-family: "Source Sans 3", system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        .deck { height: 100%; width: 100%; position: relative; }
+
+        .slide {
+            display: none;
+            height: 100%;
+            width: 100%;
+            padding: clamp(1.4rem, 3vw, 2.6rem) clamp(1.4rem, 4vw, 3.2rem) 4.4rem;
+            position: absolute;
+            inset: 0;
+            overflow: auto;
+            background:
+                radial-gradient(720px 360px at 100% 0%, rgba(31, 78, 140, 0.08), transparent 55%),
+                radial-gradient(540px 280px at 0% 100%, rgba(138, 90, 34, 0.06), transparent 50%),
+                var(--paper);
+        }
+
+        .slide.active { display: flex; flex-direction: column; }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1160px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 0.4rem 0.75rem 0.4rem 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .mark {
+            width: 22px;
+            height: 22px;
+            border-radius: 7px;
+            background:
+                radial-gradient(circle at 30% 70%, var(--teal) 0 2px, transparent 2.2px),
+                radial-gradient(circle at 62% 40%, var(--teal-deep) 0 1.6px, transparent 1.8px),
+                linear-gradient(var(--mint), var(--mint));
+        }
+
+        .brand b { font-size: 0.98rem; letter-spacing: -0.02em; }
+        .brand span { font-weight: 600; color: var(--muted); }
+
+        .who {
+            text-align: right;
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.3;
+        }
+
+        .who strong { display: block; color: var(--ink); font-size: 1.02rem; }
+
+        .eyebrow {
+            font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 0.65rem;
+        }
+
+        .eyebrow::after {
+            content: "";
+            display: block;
+            width: 3.4rem;
+            height: 4px;
+            margin-top: 0.45rem;
+            border-radius: 2px;
+            background: var(--teal);
+        }
+
+        h1, h2 {
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            color: var(--ink);
+        }
+
+        h1 { font-size: clamp(2.3rem, 4.4vw, 3.5rem); max-width: 16ch; margin-bottom: 0.8rem; }
+        h2 { font-size: clamp(1.9rem, 3.2vw, 2.6rem); margin-bottom: 0.45rem; }
+
+        .lede {
+            font-size: clamp(1.15rem, 1.6vw, 1.35rem);
+            line-height: 1.45;
+            color: var(--muted);
+            max-width: 46rem;
+            font-weight: 600;
+        }
+
+        .prepared {
+            margin-top: 1.1rem;
+            padding-top: 0.8rem;
+            border-top: 3px solid var(--teal);
+            max-width: 22rem;
+        }
+
+        .prepared .k { font-size: 0.92rem; color: var(--muted); }
+        .prepared .v { font-size: 1.25rem; font-weight: 800; }
+
+        .cover-slide {
+            padding: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(640px 320px at 0% 0%, rgba(31, 78, 140, 0.08), transparent 60%),
+                #f7f4ef;
+        }
+
+        .cover-layout {
+            height: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            grid-template-rows: minmax(0, 1fr) auto;
+        }
+
+        .cover-copy {
+            grid-column: 1;
+            grid-row: 1;
+            min-width: 0;
+            padding: clamp(1.05rem, 2vw, 1.6rem) clamp(1.2rem, 2.2vw, 2rem) 0.4rem clamp(1.4rem, 2.8vw, 2.5rem);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cover-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.95rem;
+            min-height: 0;
+        }
+
+        .display {
+            font-family: Fraunces, Georgia, serif;
+            font-weight: 560;
+            font-optical-sizing: auto;
+            font-size: clamp(3.05rem, 4.8vw, 4.45rem);
+            line-height: 0.9;
+            letter-spacing: -0.035em;
+            max-width: 14ch;
+            margin: 0 0 0.7rem;
+            color: var(--ink);
+        }
+
+        .display em {
+            display: block;
+            font-style: italic;
+            font-weight: 520;
+            color: #2a5ea8;
+        }
+
+        .cover-slide .lede {
+            max-width: 38rem;
+            font-size: clamp(1.02rem, 1.35vw, 1.16rem);
+            font-weight: 600;
+        }
+
+        .cover-values {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.7rem;
+            margin: 0 0.85rem 4.15rem;
+        }
+
+        .value {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 1rem 0.95rem 1.1rem;
+            box-shadow: var(--shadow);
+            min-width: 0;
+        }
+
+        .viz {
+            height: 68px;
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .viz svg { width: 96px; height: 58px; display: block; }
+
+        .value-k {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.84rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--teal);
+            margin-bottom: 0.32rem;
+        }
+
+        .value h3 {
+            font-size: 1.2rem;
+            line-height: 1.15;
+            margin-bottom: 0.25rem;
+        }
+
+        .value p {
+            font-size: 1rem;
+            line-height: 1.3;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .value.later {
+            background: linear-gradient(180deg, #f8f3ea, #fff);
+            border-color: #e4d3b8;
+        }
+
+        .value.later .value-k { color: var(--amber); }
+
+        .cover-stage {
+            grid-column: 2;
+            grid-row: 1;
+            position: relative;
+            margin: 0.7rem 0.85rem 0.4rem 0;
+            height: calc(100% - 2.4rem);
+            align-self: end;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #d5deea;
+            box-shadow: 0 18px 40px rgba(22, 36, 64, 0.14);
+        }
+
+        .cover-stage img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 36%;
+        }
+
+        .cover-stage figcaption {
+            position: absolute;
+            left: 0.85rem;
+            right: 0.85rem;
+            bottom: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 0.8rem;
+            color: white;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .cover-stage strong {
+            display: block;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cover-stage span {
+            display: block;
+            margin-top: 0.1rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .cover-stage::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0 0;
+            height: 42%;
+            background: linear-gradient(transparent, rgba(16, 28, 48, 0.72));
+            pointer-events: none;
+        }
+
+        .cover-stage figcaption { z-index: 1; }
+
+        .priorities, .groups, .pair, .quad, .docs, .secure, .close-grid, .apps {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .priorities { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .groups { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 0.8rem; }
+        .pair { grid-template-columns: 1.1fr 0.9fr; margin-top: 0.9rem; align-items: stretch; }
+        .quad { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 0.9rem; }
+        .secure { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 0.85rem; }
+        .close-grid { grid-template-columns: 0.72fr 1.28fr; margin-top: 0.9rem; }
+        .apps { grid-template-columns: 1fr 1fr; margin-top: 1.1rem; }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 1.05rem 1.05rem 1.15rem;
+            box-shadow: var(--shadow);
+        }
+
+        .card.priority {
+            background: linear-gradient(180deg, #f3f6fb, var(--white) 42%);
+            border-color: #c5d4ea;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            height: 1.55rem;
+            padding: 0 0.55rem;
+            border-radius: 999px;
+            background: var(--sand);
+            color: var(--amber);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.65rem;
+        }
+
+        .card h3 { font-size: 1.28rem; line-height: 1.2; margin-bottom: 0.35rem; }
+        .card p, .card li { font-size: 1.05rem; line-height: 1.4; color: var(--muted); font-weight: 600; }
+        .card ul { margin: 0.35rem 0 0 1.1rem; display: grid; gap: 0.22rem; }
+
+        .glyph {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: var(--mint);
+            color: var(--teal-deep);
+            margin-bottom: 0.75rem;
+        }
+
+        .glyph svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .money {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .pay-card, .loop-card {
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .visa {
+            width: 230px;
+            height: 138px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #2a5ea8, #16325f);
+            color: white;
+            padding: 1rem 1.1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 16px 30px rgba(22, 50, 95, 0.22);
+        }
+
+        .chip { width: 36px; height: 26px; border-radius: 6px; background: linear-gradient(#f3d48a, #c9a15b); }
+        .visa b { letter-spacing: 0.08em; font-size: 1rem; }
+
+        .loop {
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            border: 10px solid #d5e2f2;
+            border-top-color: var(--teal);
+            border-right-color: #c4a06a;
+            display: grid;
+            place-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--teal-deep);
+        }
+
+        .docs {
+            grid-template-columns: 240px 1fr;
+            margin-top: 0.8rem;
+            align-items: center;
+        }
+
+        .folder {
+            height: 280px;
+            border-radius: 22px;
+            background: linear-gradient(180deg, #2a5ea8, #16325f);
+            color: white;
+            padding: 4.4rem 1.2rem 1.2rem;
+            position: relative;
+        }
+
+        .folder::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 28px;
+            width: 48%;
+            height: 26px;
+            background: #8eabd4;
+            border-radius: 14px 16px 0 0;
+        }
+
+        .folder strong { display: block; font-size: 1.4rem; }
+        .folder span { display: block; margin-top: 0.5rem; font-size: 1.05rem; color: rgba(255,255,255,0.86); }
+
+        .file-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+
+        .file {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 0.9rem 1rem;
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.12rem;
+            box-shadow: var(--shadow);
+        }
+
+        .file i {
+            width: 36px;
+            height: 46px;
+            border-radius: 6px;
+            border: 2px solid #c5d4ea;
+            background: var(--mint);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .file i::after {
+            content: "";
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            top: 10px;
+            height: 3px;
+            background: var(--teal);
+            box-shadow: 0 7px 0 #8eabd4, 0 14px 0 #c5d4ea;
+        }
+
+        .iot {
+            display: grid;
+            grid-template-columns: 1fr 220px 1fr;
+            gap: 0.85rem;
+            align-items: center;
+            margin-top: 0.7rem;
+        }
+
+        .iot-col { display: grid; gap: 0.6rem; }
+
+        .chip-row {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 0.75rem 0.85rem;
+            display: flex;
+            gap: 0.65rem;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1.08rem;
+            box-shadow: var(--shadow);
+        }
+
+        .chip-row .glyph { width: 42px; height: 42px; border-radius: 12px; margin: 0; }
+        .chip-row .glyph svg { width: 22px; height: 22px; }
+
+        .tower {
+            height: 360px;
+            border-radius: 18px 18px 8px 8px;
+            background: linear-gradient(180deg, #2a5ea8, #16325f);
+            display: grid;
+            grid-template-rows: auto repeat(6, 1fr);
+            gap: 8px;
+            padding: 14px 18px 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .tower b { color: white; text-align: center; font-size: 0.95rem; }
+        .floor {
+            border-radius: 6px;
+            background: repeating-linear-gradient(90deg, rgba(255,255,255,0.82) 0 16px, transparent 16px 26px);
+        }
+
+        .steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.7rem; margin-top: 0.85rem; }
+        .step { min-height: 210px; }
+        .step .num {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--teal); color: white;
+            display: grid; place-items: center; font-weight: 800; margin-bottom: 0.65rem;
+        }
+        .step.focus { background: var(--teal-deep); color: white; }
+        .step.focus p { color: rgba(255,255,255,0.86); }
+        .step.focus .num { background: rgba(255,255,255,0.16); }
+
+        .note {
+            margin-top: 0.85rem;
+            background: var(--mint);
+            border-left: 4px solid var(--teal);
+            border-radius: 0 14px 14px 0;
+            padding: 0.8rem 1rem;
+            font-size: 1.08rem;
+            font-weight: 700;
+        }
+
+        .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-top: 0.7rem; }
+        .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-top: 0.75rem; }
+        .mini { background: var(--paper); border-radius: 12px; padding: 0.7rem 0.75rem; }
+        .mini b { display: block; font-size: 1.02rem; }
+        .mini span { font-size: 0.95rem; color: var(--muted); font-weight: 600; }
+
+        .close-brand {
+            background: var(--teal-deep);
+            color: white;
+            border-radius: 22px;
+            padding: 1.3rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .close-brand p { font-size: 1.12rem; font-weight: 700; color: rgba(255,255,255,0.88); }
+        .contact p { margin-top: 0.35rem; }
+
+        a.app-link {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            min-height: 220px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        a.app-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px rgba(28, 43, 40, 0.1);
+        }
+
+        a.app-link .pill { align-self: flex-start; }
+
+        a.app-link .url {
+            margin-top: auto;
+            align-self: stretch;
+            color: var(--teal);
+            font-weight: 800;
+            font-size: 1.05rem;
+            word-break: break-word;
+        }
+
+        .footer-bar {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 1.1rem;
+            background: rgba(18, 32, 58, 0.94);
+            color: rgba(255,255,255,0.86);
+            z-index: 20;
+            font-size: 0.92rem;
+        }
+
+        .nav-btns { display: flex; gap: 0.4rem; }
+
+        button {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border-radius: 999px;
+            padding: 0.38rem 0.85rem;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .progress {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: var(--teal); z-index: 30;
+        }
+
+        .meter {
+            margin-top: 0.55rem;
+            height: 8px;
+            border-radius: 999px;
+            background: #f3d2c8;
+            overflow: hidden;
+        }
+
+        .meter i {
+            display: block;
+            height: 100%;
+            width: 72%;
+            border-radius: inherit;
+            background: var(--collected);
+        }
+
+        .meter-k {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.28rem;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .vault, .mini-flow, .later-path {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.55rem;
+        }
+
+        .vault span, .mini-flow span, .later-path span {
+            background: var(--mint);
+            color: var(--teal-deep);
+            border-radius: 999px;
+            padding: 0.16rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .later-path span { background: var(--sand); color: var(--amber); }
+
+        .info-panel { display: flex; flex-direction: column; gap: 0.85rem; }
+        .info-panel h3 { margin: 0; }
+
+        .donut-row {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .donut {
+            width: 148px;
+            height: 148px;
+            border-radius: 50%;
+            background: conic-gradient(var(--collected) 0 68%, var(--open) 68% 100%);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .donut::after {
+            content: "";
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            background: var(--white);
+            box-shadow: inset 0 0 0 1px var(--line);
+        }
+
+        .donut b {
+            position: absolute;
+            font-size: 0.95rem;
+            letter-spacing: -0.02em;
+        }
+
+        .legend { list-style: none; display: grid; gap: 0.55rem; margin: 0; }
+        .legend li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.02rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .swatch {
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .swatch.collected { background: var(--collected); }
+        .swatch.open { background: var(--open); }
+
+        .fine {
+            font-size: 0.86rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .flow {
+            list-style: none;
+            display: grid;
+            gap: 0.55rem;
+            margin: 0;
+        }
+
+        .flow li {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.7rem;
+            align-items: center;
+            background: var(--paper);
+            border-radius: 14px;
+            padding: 0.65rem 0.75rem;
+        }
+
+        .flow b {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: var(--teal);
+            color: white;
+            font-size: 0.82rem;
+        }
+
+        .flow span { font-weight: 800; font-size: 1.05rem; }
+        .flow small { display: block; font-weight: 600; color: var(--muted); font-size: 0.9rem; }
+
+        .value-slide {
+            padding-top: 1rem;
+            padding-left: 1.3rem;
+            padding-right: 1.3rem;
+        }
+
+        .value-slide .content { max-width: 1380px; }
+        .value-slide h2 { font-size: clamp(2rem, 2.8vw, 2.5rem); margin-bottom: 0.15rem; }
+
+        .keep-slide { padding-top: 0.4rem; }
+        .keep-slide .content { justify-content: center; }
+        .keep-slide .explain-list { gap: 0.32rem; margin-top: 0.35rem; }
+        .keep-slide .explain { padding: 0.5rem 0.85rem; }
+        .keep-slide .explain-viz { height: 52px; }
+        .keep-slide h2 { margin-bottom: 0; }
+
+        .explain-list {
+            display: grid;
+            gap: 0.7rem;
+            margin-top: 0.65rem;
+        }
+
+        .explain {
+            display: grid;
+            grid-template-columns: 108px minmax(250px, 0.9fr) minmax(0, 1.5fr);
+            gap: 1rem;
+            align-items: center;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 0.85rem 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .explain.later {
+            background: linear-gradient(180deg, #f8f3ea, #fff);
+            border-color: #e4d3b8;
+        }
+
+        .explain.focus {
+            background: linear-gradient(180deg, #f3f6fb, #fff);
+            border-color: #c5d4ea;
+        }
+
+        .explain-viz {
+            height: 78px;
+            display: grid;
+            place-items: center;
+            background: var(--mint);
+            border-radius: 16px;
+        }
+
+        .explain.later .explain-viz { background: var(--sand); }
+        .explain-viz svg { width: 100px; height: 60px; display: block; }
+
+        .explain .value-k { font-size: 0.82rem; margin-bottom: 0.12rem; }
+        .explain h3 { font-size: 1.28rem; line-height: 1.15; margin: 0; }
+        .explain p {
+            margin-top: 0.2rem;
+            font-size: 1.05rem;
+            line-height: 1.3;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .explain-steps {
+            display: flex;
+            align-items: stretch;
+            gap: 0.35rem;
+            min-width: 0;
+        }
+
+        .explain-steps li {
+            list-style: none;
+            flex: 1;
+            min-width: 0;
+            background: var(--paper);
+            border-radius: 14px;
+            padding: 0.65rem 0.7rem;
+        }
+
+        .explain-steps b {
+            display: block;
+            font-size: 1.02rem;
+            line-height: 1.2;
+        }
+
+        .explain-steps span {
+            display: block;
+            margin-top: 0.12rem;
+            font-size: 0.92rem;
+            line-height: 1.25;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .explain-steps .go { background: #e8f0ff; }
+        .explain-steps .wait { background: #fde8e2; }
+        .explain-steps .work { background: #f8efdf; }
+        .explain-steps .done { background: #e5f6ee; }
+        .explain-steps .ahead { background: var(--sand); }
+
+        @media (max-width: 980px) {
+            .priorities, .groups, .pair, .quad, .secure, .money, .docs, .iot, .steps, .who-grid, .close-grid, .file-grid, .mini-row, .apps {
+                grid-template-columns: 1fr;
+            }
+            h1 { max-width: none; }
+            .cover-layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+            .cover-copy, .cover-stage, .cover-values { grid-column: 1; }
+            .cover-stage { grid-row: 2; min-height: 220px; margin: 0 0.85rem; }
+            .cover-values { grid-row: 3; grid-template-columns: 1fr 1fr; }
+            .display { max-width: none; }
+            .explain { grid-template-columns: 1fr; }
+            .explain-steps { flex-wrap: wrap; }
+            .tower { height: 180px; }
+        }
+
+        @media print {
+            @page { size: 13.333in 7.5in; margin: 0; }
+
+            html, body {
+                height: auto;
+                overflow: visible;
+                background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .deck { height: auto; }
+            .progress, .footer-bar { display: none !important; }
+
+            .slide {
+                display: flex !important;
+                position: relative !important;
+                inset: auto !important;
+                width: 13.333in;
+                height: 7.5in;
+                overflow: hidden;
+                break-after: page;
+                page-break-after: always;
+                padding-bottom: 1.1rem;
+            }
+
+            .slide:last-child {
+                break-after: auto;
+                page-break-after: auto;
+            }
+
+            .cover-values { margin-bottom: 0.7rem !important; }
+            .cover-layout { grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important; grid-template-rows: minmax(0, 1fr) auto !important; }
+            .cover-copy { grid-column: 1 !important; grid-row: 1 !important; }
+            .cover-stage { grid-column: 2 !important; grid-row: 1 !important; min-height: 0 !important; }
+            .cover-values { grid-column: 1 / -1 !important; grid-row: 2 !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+            .display { max-width: 14ch !important; }
+            .explain { grid-template-columns: 108px minmax(250px, 0.9fr) minmax(0, 1.5fr) !important; }
+            .explain-steps { flex-wrap: nowrap !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress" id="progress"></div>
+    <div class="deck" id="deck">
+
+        <section class="slide cover-slide active" data-title="Cover">
+            <div class="cover-layout">
+                <div class="cover-copy">
+                    <div class="topbar">
+                        <div class="brand"><span class="mark"></span><b>Nex<span>Agent</span></b></div>
+                        <div class="who"><strong>Intelligence of the Era LLC</strong>Oman subsidiary · Muscat</div>
+                    </div>
+                    <div class="cover-main">
+                        <div>
+                            <p class="eyebrow">For the Golf Tower board</p>
+                            <h1 class="display">Run efficient, <em>Live Great</em></h1>
+                            <p class="lede">Property management for Golf Tower. Rent, records, Autopay, and maintenance the board can see.</p>
+                        </div>
+                    </div>
+                </div>
+                <figure class="cover-stage">
+                    <img src="pitch-assets/golf-tower/building.jpg" alt="Golf Tower at Muscat Hills, seen from the plaza" />
+                    <figcaption>
+                        <div>
+                            <strong>Golf Tower</strong>
+                            <span>Muscat Hills · prepared for the board</span>
+                        </div>
+                    </figcaption>
+                </figure>
+                <div class="cover-values">
+                    <article class="value">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="2" y="28" width="12" height="16" rx="3" fill="#3b74e0" opacity="0.35"/>
+                                <rect x="18" y="18" width="12" height="26" rx="3" fill="#3b74e0" opacity="0.62"/>
+                                <rect x="34" y="6" width="12" height="38" rx="3" fill="#3b74e0"/>
+                                <circle cx="62" cy="16" r="11" fill="#1f4e8c"/>
+                                <path d="M56.6 16.2 l3.2 3.2 6.4-6.6" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">01</div>
+                        <h3>On-time rent collection</h3>
+                        <p>Due on the date. Open items stay listed.</p>
+                    </article>
+                    <article class="value">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="8" width="36" height="32" rx="5" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M11 18h18M11 25h13M11 32h15" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="44" y="14" width="28" height="24" rx="6" fill="#1f4e8c"/>
+                                <path d="M52 26 v-3.2 a6 6 0 0 1 12 0 V26" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                                <circle cx="58" cy="31" r="1.8" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">02</div>
+                        <h3>Safe data storage</h3>
+                        <p>Files locked to the unit.</p>
+                    </article>
+                    <article class="value">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <path d="M16 34c-6-2-9-8-7-14 2-7 10-10 16-7" fill="none" stroke="#3b74e0" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M24 11 l2.4 5.2 -5.4 .2" fill="#3b74e0"/>
+                                <circle cx="18" cy="30" r="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="40" cy="18" r="6" fill="#1f4e8c"/>
+                                <circle cx="62" cy="30" r="6" fill="#3b74e0"/>
+                                <path d="M24 27.5 L34 21.5 M46 21.5 L56 27.5" stroke="#8eabd4" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">03</div>
+                        <h3>Autopay</h3>
+                        <p>Enroll once. It collects itself.</p>
+                    </article>
+                    <article class="value">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="6" width="38" height="36" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M12 18h18" stroke="#c5d4ea" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M12 26h14" stroke="#c5d4ea" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M12 34h10" stroke="#3b74e0" stroke-width="2.2" stroke-linecap="round"/>
+                                <circle cx="58" cy="14" r="5.5" fill="#e07a5f"/>
+                                <circle cx="58" cy="26" r="5.5" fill="#e0a15a"/>
+                                <circle cx="66" cy="38" r="5.5" fill="#1f8a5b"/>
+                                <path d="M63.6 38.1 l1.6 1.6 3.2-3.4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">04</div>
+                        <h3>Maintenance monitoring</h3>
+                        <p>Reported, in progress, done.</p>
+                    </article>
+                    <article class="value later">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <path d="M28 44 V16 l11-8 11 8 v28" fill="#f8f1e6" stroke="#9a5b16" stroke-width="1.6" stroke-linejoin="round"/>
+                                <path d="M34 44 V30 h10 v14" fill="none" stroke="#9a5b16" stroke-width="1.4"/>
+                                <path d="M33 22h3M41 22h3M33 28h3" stroke="#e0a15a" stroke-width="1.6" stroke-linecap="round"/>
+                                <circle cx="60" cy="14" r="9" fill="#9a5b16"/>
+                                <path d="M60 9.5 v5.2 l3 1.8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">05 · Ahead</div>
+                        <h3>Smart building</h3>
+                        <p>Cameras, access, and meters — later.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="The value">
+            <div class="content">
+                <p class="eyebrow">How it works</p>
+                <h2>Property Management Solutions</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="2" y="28" width="12" height="16" rx="3" fill="#3b74e0" opacity="0.35"/>
+                                <rect x="18" y="18" width="12" height="26" rx="3" fill="#3b74e0" opacity="0.62"/>
+                                <rect x="34" y="6" width="12" height="38" rx="3" fill="#3b74e0"/>
+                                <circle cx="62" cy="16" r="11" fill="#1f4e8c"/>
+                                <path d="M56.6 16.2 l3.2 3.2 6.4-6.6" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>On-time rent collection</h3>
+                            <p>Collected and still open, both visible.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Charge posted</b><span>On the unit.</span></li>
+                            <li class="go"><b>Due date</b><span>Runs that day.</span></li>
+                            <li class="go"><b>Collected</b><span>Cash is in.</span></li>
+                            <li class="wait"><b>Still open</b><span>Stays on the list.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="8" width="36" height="32" rx="5" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M11 18h18M11 25h13M11 32h15" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="44" y="14" width="28" height="24" rx="6" fill="#1f4e8c"/>
+                                <path d="M52 26 v-3.2 a6 6 0 0 1 12 0 V26" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                                <circle cx="58" cy="31" r="1.8" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>Safe data storage</h3>
+                            <p>With the unit, not in an inbox.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Contract</b><span>On the unit.</span></li>
+                            <li><b>ID</b><span>Who owns it.</span></li>
+                            <li><b>Receipt</b><span>Proof of payment.</span></li>
+                            <li class="go"><b>Locked</b><span>Right roles only.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <path d="M16 34c-6-2-9-8-7-14 2-7 10-10 16-7" fill="none" stroke="#3b74e0" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M24 11 l2.4 5.2 -5.4 .2" fill="#3b74e0"/>
+                                <circle cx="18" cy="30" r="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="40" cy="18" r="6" fill="#1f4e8c"/>
+                                <circle cx="62" cy="30" r="6" fill="#3b74e0"/>
+                                <path d="M24 27.5 L34 21.5 M46 21.5 L56 27.5" stroke="#8eabd4" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Autopay</h3>
+                            <p>Enroll once. No monthly chase.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Enroll</b><span>Set in the app.</span></li>
+                            <li class="go"><b>Due date</b><span>No reminders.</span></li>
+                            <li class="go"><b>Card collected</b><span>Settled in Oman.</span></li>
+                            <li class="done"><b>Receipt</b><span>Stays on the unit.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="6" width="38" height="36" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M12 18h18" stroke="#c5d4ea" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M12 26h14" stroke="#c5d4ea" stroke-width="2.2" stroke-linecap="round"/>
+                                <path d="M12 34h10" stroke="#3b74e0" stroke-width="2.2" stroke-linecap="round"/>
+                                <circle cx="58" cy="14" r="5.5" fill="#e07a5f"/>
+                                <circle cx="58" cy="26" r="5.5" fill="#e0a15a"/>
+                                <circle cx="58" cy="38" r="5.5" fill="#1f8a5b"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Maintenance monitoring</h3>
+                            <p>An owner, and a status.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Reported</b><span>Someone opens it.</span></li>
+                            <li class="work"><b>In progress</b><span>An owner is set.</span></li>
+                            <li class="done"><b>Done</b><span>Closed and kept.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain later">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <path d="M28 44 V16 l11-8 11 8 v28" fill="#f8f1e6" stroke="#9a5b16" stroke-width="1.6" stroke-linejoin="round"/>
+                                <path d="M34 44 V30 h10 v14" fill="none" stroke="#9a5b16" stroke-width="1.4"/>
+                                <path d="M33 22h3M41 22h3M33 28h3" stroke="#e0a15a" stroke-width="1.6" stroke-linecap="round"/>
+                                <circle cx="60" cy="14" r="9" fill="#9a5b16"/>
+                                <path d="M60 9.5 v5.2 l3 1.8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">05 · Ahead</div>
+                            <h3>Smart building</h3>
+                            <p>Same platform, when you are ready.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="ahead"><b>Cameras</b><span>Common areas.</span></li>
+                            <li class="ahead"><b>Access</b><span>Who came in.</span></li>
+                            <li class="ahead"><b>Meters</b><span>One system.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide keep-slide" data-title="What you keep">
+            <div class="content">
+                <p class="eyebrow">What you keep</p>
+                <h2>Existing Features Remain</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <circle cx="16" cy="16" r="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="32" cy="16" r="6" fill="#3b74e0"/>
+                                <path d="M8 36c1.2-6 6-9 12-9h8c6 0 10.8 3 12 9" fill="none" stroke="#1f4e8c" stroke-width="1.8" stroke-linecap="round"/>
+                                <rect x="48" y="10" width="22" height="28" rx="3" fill="#1f4e8c"/>
+                                <path d="M53 18h12M53 24h8M53 30h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>People &amp; property</h3>
+                            <p>The tower, the people, and who can act.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Units</b><span>Homes in the tower.</span></li>
+                            <li><b>Residents</b><span>Who lives there.</span></li>
+                            <li class="go"><b>Roles</b><span>Who can act.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="6" y="10" width="34" height="24" rx="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M12 20h16M12 26h10" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="52" cy="18" r="8" fill="#3b74e0"/>
+                                <circle cx="66" cy="30" r="6" fill="#1f4e8c"/>
+                                <path d="M46 24l6 4" stroke="#8eabd4" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>Communication</h3>
+                            <p>Notices to the right units.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Notice</b><span>From the building.</span></li>
+                            <li class="go"><b>Right units</b><span>Only who you choose.</span></li>
+                            <li><b>Push, email, SMS</b><span>One notice, three ways.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <path d="M39 8 a10 10 0 0 1 10 12 v4 l4 5 H25 l4-5 v-4 a10 10 0 0 1 10-12z" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6" stroke-linejoin="round"/>
+                                <path d="M34 34 a5 5 0 0 0 10 0" fill="none" stroke="#1f4e8c" stroke-width="1.6" stroke-linecap="round"/>
+                                <circle cx="56" cy="14" r="6" fill="#e07a5f"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Notifications</h3>
+                            <p>Alerts, messages, and information for tenants.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Alerts</b><span>Important notices.</span></li>
+                            <li class="go"><b>Messages</b><span>Sent to tenants.</span></li>
+                            <li><b>Information</b><span>What they need to know.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="8" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M16 20h22M16 28h14" stroke="#c5d4ea" stroke-width="2.2" stroke-linecap="round"/>
+                                <circle cx="60" cy="18" r="8" fill="#e07a5f"/>
+                                <path d="M60 14.5 v4.2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                                <circle cx="60" cy="22.2" r="0.9" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Helpdesk</h3>
+                            <p>An owner, a status, a record.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Ticket</b><span>Has an owner.</span></li>
+                            <li class="work"><b>Updates</b><span>Photos and status.</span></li>
+                            <li class="done"><b>Report</b><span>Kept on file.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain focus">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="26" width="12" height="16" rx="3" fill="#3b74e0" opacity="0.35"/>
+                                <rect x="20" y="16" width="12" height="26" rx="3" fill="#3b74e0" opacity="0.62"/>
+                                <rect x="36" y="6" width="12" height="36" rx="3" fill="#3b74e0"/>
+                                <rect x="54" y="14" width="20" height="14" rx="3" fill="#1f4e8c"/>
+                                <path d="M58 21h12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">05 · Focus</div>
+                            <h3>Money</h3>
+                            <p>Local collection. Autopay on the due date.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>Gateway</b><span>Settled in Oman.</span></li>
+                            <li class="go"><b>Autopay</b><span>Units pay themselves.</span></li>
+                            <li><b>Receipts</b><span>Open dues stay visible.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain focus">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="8" y="10" width="30" height="28" rx="4" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <path d="M14 20h16M14 26h12M14 32h14" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="42" y="14" width="28" height="22" rx="5" fill="#1f4e8c"/>
+                                <path d="M50 25 v-2.4 a4.5 4.5 0 0 1 9 0 V25" fill="none" stroke="#fff" stroke-width="1.6"/>
+                                <circle cx="54.5" cy="29" r="1.4" fill="#fff"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">06 · Focus</div>
+                            <h3>Documents</h3>
+                            <p>Categorized, tied to the building, shared by you.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Category</b><span>By type.</span></li>
+                            <li class="go"><b>The building</b><span>Found by unit.</span></li>
+                            <li><b>Share</b><span>Only what you open.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="6" y="8" width="22" height="32" rx="4" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <rect x="32" y="8" width="22" height="32" rx="4" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="62" cy="24" r="10" fill="#3b74e0"/>
+                                <path d="M58 24h8M62 20v8" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">07</div>
+                            <h3>Services &amp; access</h3>
+                            <p>Paid services, two apps, more buildings.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Services</b><span>Residents can pay.</span></li>
+                            <li class="go"><b>Two apps</b><span>Staff and residents.</span></li>
+                            <li><b>More buildings</b><span>Same setup again.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="Rent collection">
+            <div class="content">
+                <p class="eyebrow">01 · On-time rent</p>
+                <h2>Collected on the due date.</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="8" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><path d="M16 20h22M16 28h14" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>Charge posted</h3>
+                            <p>On the unit, before the date.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Amount</b><span>The due is set.</span></li>
+                            <li><b>Unit</b><span>Tied to the home.</span></li>
+                            <li class="go"><b>Before the date</b><span>No surprise.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="16" y="8" width="46" height="32" rx="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/><path d="M24 18h14M24 26h10" stroke="#3b74e0" stroke-width="2" stroke-linecap="round"/><circle cx="52" cy="24" r="7" fill="#1f4e8c"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>Due date</h3>
+                            <p>Collection runs that day.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>That day</b><span>Not the week after.</span></li>
+                            <li class="go"><b>Card</b><span>Settled in Oman.</span></li>
+                            <li><b>Recorded</b><span>Same day.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="6" y="28" width="12" height="14" rx="3" fill="#3b74e0" opacity="0.35"/><rect x="22" y="18" width="12" height="24" rx="3" fill="#3b74e0" opacity="0.62"/><rect x="38" y="8" width="12" height="34" rx="3" fill="#3b74e0"/><circle cx="64" cy="16" r="9" fill="#1f4e8c"/><path d="M59.5 16.2 l2.6 2.6 5-5.2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Collected</h3>
+                            <p>The board sees the cash.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>In</b><span>Cash is recorded.</span></li>
+                            <li class="done"><b>Receipt</b><span>On the unit.</span></li>
+                            <li><b>Same day</b><span>No waiting.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><circle cx="24" cy="24" r="14" fill="none" stroke="#e07a5f" stroke-width="8"/><circle cx="24" cy="24" r="6" fill="#fff"/><path d="M46 18h22M46 26h16M46 34h18" stroke="#e07a5f" stroke-width="2.2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Still open</h3>
+                            <p>What missed the date stays listed.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Named</b><span>Which unit.</span></li>
+                            <li class="wait"><b>Visible</b><span>Same day.</span></li>
+                            <li><b>Not hidden</b><span>The board can see it.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="Safe storage">
+            <div class="content">
+                <p class="eyebrow">02 · Safe data</p>
+                <h2>Files locked to the unit.</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="8" width="36" height="32" rx="5" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/><path d="M18 18h18M18 26h12M18 32h14" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>Contract</h3>
+                            <p>Tenancy papers, on the unit.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>One copy</b><span>Not in an inbox.</span></li>
+                            <li><b>The unit</b><span>Found by home.</span></li>
+                            <li class="go"><b>Kept</b><span>Backed up.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><circle cx="28" cy="16" r="8" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/><path d="M14 38c1-7 7-11 14-11s13 4 14 11" fill="none" stroke="#1f4e8c" stroke-width="1.8" stroke-linecap="round"/><rect x="48" y="12" width="20" height="24" rx="4" fill="#1f4e8c"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>ID</h3>
+                            <p>Who owns it, and who lives there.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Owner</b><span>On the record.</span></li>
+                            <li><b>Resident</b><span>With the unit.</span></li>
+                            <li class="go"><b>Private</b><span>Right roles only.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="12" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><path d="M22 22h20" stroke="#3b74e0" stroke-width="2.4" stroke-linecap="round"/><circle cx="52" cy="32" r="6" fill="#3b74e0"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Receipt</h3>
+                            <p>Proof of what was paid.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="done"><b>Paid</b><span>Tied to the due.</span></li>
+                            <li><b>The unit</b><span>Not a folder.</span></li>
+                            <li><b>Later</b><span>Still there.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="22" y="16" width="34" height="24" rx="6" fill="#1f4e8c"/><path d="M30 16 v-3 a9 9 0 0 1 18 0 V16" fill="none" stroke="#1f4e8c" stroke-width="2.2"/><circle cx="39" cy="28" r="2.2" fill="#fff"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Locked</h3>
+                            <p>Only the right roles can open it.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>Staff</b><span>By role.</span></li>
+                            <li><b>Resident</b><span>Only if you allow.</span></li>
+                            <li class="go"><b>Backup</b><span>Not one laptop.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="Autopay">
+            <div class="content">
+                <p class="eyebrow">03 · Autopay</p>
+                <h2>Enroll once. It collects itself.</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="18" y="6" width="24" height="36" rx="4" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><circle cx="30" cy="16" r="4" fill="#3b74e0"/><path d="M24 26h12M24 32h8" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>Enroll</h3>
+                            <p>The resident sets it once.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>In the app</b><span>One time.</span></li>
+                            <li class="go"><b>Card on file</b><span>Visa or Mastercard.</span></li>
+                            <li><b>The unit</b><span>Not every month.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><circle cx="28" cy="24" r="14" fill="none" stroke="#3b74e0" stroke-width="2.4"/><path d="M28 14 v10 l6 3" fill="none" stroke="#1f4e8c" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>Due date</h3>
+                            <p>No reminder round.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>Runs itself</b><span>On the date.</span></li>
+                            <li><b>Enrolled units</b><span>Only those.</span></li>
+                            <li class="go"><b>Staff</b><span>Stay out of the chase.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="12" width="58" height="24" rx="6" fill="#1f4e8c"/><path d="M18 24h28" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="56" cy="24" r="5" fill="#3b74e0"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Card collected</h3>
+                            <p>Settled in Oman.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>Visa</b><span>Accepted.</span></li>
+                            <li class="go"><b>Mastercard</b><span>Accepted.</span></li>
+                            <li><b>Local</b><span>Settlement stays here.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="14" y="8" width="36" height="32" rx="5" fill="#e5f6ee" stroke="#1f8a5b" stroke-width="1.6"/><path d="M26 24 l6 6 12-14" fill="none" stroke="#1f8a5b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Receipt</h3>
+                            <p>It stays on the unit.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="done"><b>Proof</b><span>Of what came in.</span></li>
+                            <li><b>Same day</b><span>Not later.</span></li>
+                            <li class="go"><b>The board</b><span>Can see it.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="Maintenance">
+            <div class="content">
+                <p class="eyebrow">04 · Maintenance</p>
+                <h2>Reported, in progress, done.</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><circle cx="58" cy="16" r="8" fill="#e07a5f"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>Reported</h3>
+                            <p>Someone opens it.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Resident</b><span>From the app.</span></li>
+                            <li class="wait"><b>Staff</b><span>Can open one too.</span></li>
+                            <li><b>A record</b><span>It starts here.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><path d="M18 20h20M18 28h14" stroke="#e0a15a" stroke-width="2.2" stroke-linecap="round"/><circle cx="58" cy="24" r="8" fill="#e0a15a"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>In progress</h3>
+                            <p>An owner is set.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="work"><b>Owner</b><span>A name on the job.</span></li>
+                            <li><b>Photos</b><span>On the request.</span></li>
+                            <li><b>Comments</b><span>The trail stays.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="8" width="40" height="32" rx="6" fill="#e5f6ee" stroke="#1f8a5b" stroke-width="1.6"/><path d="M22 24 l6 6 14-14" fill="none" stroke="#1f8a5b" stroke-width="2.4" stroke-linecap="round"/><circle cx="58" cy="24" r="8" fill="#1f8a5b"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Done</h3>
+                            <p>Closed, and kept.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="done"><b>Closed</b><span>Status is done.</span></li>
+                            <li><b>History</b><span>Not deleted.</span></li>
+                            <li class="go"><b>On file</b><span>Not lost in chat.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><circle cx="18" cy="24" r="7" fill="#e07a5f"/><circle cx="39" cy="24" r="7" fill="#e0a15a"/><circle cx="60" cy="24" r="7" fill="#1f8a5b"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04</div>
+                            <h3>Board view</h3>
+                            <p>See where every request stands.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="wait"><b>Open</b><span>Just reported.</span></li>
+                            <li class="work"><b>Moving</b><span>Someone owns it.</span></li>
+                            <li class="done"><b>Done</b><span>Closed and kept.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide value-slide" data-title="Smart building">
+            <div class="content">
+                <p class="eyebrow">05 · Ahead</p>
+                <h2>Cameras, access, and meters — later.</h2>
+                <div class="explain-list">
+                    <article class="explain later">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><path d="M10 28 h16 l6-8 h12 l6 8 h16 v10 H10z" fill="#f8f1e6" stroke="#9a5b16" stroke-width="1.6"/><circle cx="39" cy="31" r="4" fill="none" stroke="#9a5b16" stroke-width="1.6"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01 · Later</div>
+                            <h3>Cameras</h3>
+                            <p>Common areas, in one view.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="ahead"><b>Lobbies</b><span>And shared floors.</span></li>
+                            <li class="ahead"><b>One view</b><span>Not a second system.</span></li>
+                            <li class="ahead"><b>When ready</b><span>Not on day one.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain later">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="24" y="16" width="30" height="22" rx="4" fill="#f8f1e6" stroke="#9a5b16" stroke-width="1.6"/><path d="M32 16 v-4 a7 7 0 0 1 14 0 V16" fill="none" stroke="#9a5b16" stroke-width="1.8"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02 · Later</div>
+                            <h3>Access</h3>
+                            <p>Who came in, and when.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="ahead"><b>Doors</b><span>Common entries.</span></li>
+                            <li class="ahead"><b>A record</b><span>Time and person.</span></li>
+                            <li class="ahead"><b>When ready</b><span>Added later.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain later">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><path d="M39 8 v14" stroke="#9a5b16" stroke-width="2.2" stroke-linecap="round"/><path d="M26 16 a16 16 0 1 0 26 0" fill="none" stroke="#9a5b16" stroke-width="2.2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03 · Later</div>
+                            <h3>Meters</h3>
+                            <p>Usage, without a separate system.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="ahead"><b>Usage</b><span>By the building.</span></li>
+                            <li class="ahead"><b>One place</b><span>Next to the dues.</span></li>
+                            <li class="ahead"><b>When ready</b><span>Not a new vendor.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain later">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><path d="M28 42 V16 l11-8 11 8 v26" fill="#f8f1e6" stroke="#9a5b16" stroke-width="1.6" stroke-linejoin="round"/><circle cx="39" cy="12" r="7" fill="#9a5b16"/><path d="M39 8.5 v4 l2.4 1.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04 · Later</div>
+                            <h3>Same platform</h3>
+                            <p>Added when Golf Tower is ready.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="ahead"><b>Parking</b><span>If you want it.</span></li>
+                            <li class="ahead"><b>Intercom</b><span>If you want it.</span></li>
+                            <li class="ahead"><b>HVAC</b><span>Same place.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Who we are">
+            <div class="content">
+                <p class="eyebrow">Who delivers it</p>
+                <h2>A Muscat company, with a US parent.</h2>
+                <div class="who-grid">
+                    <div class="card">
+                        <h3>Intelligence of the Era LLC</h3>
+                        <p>The Oman subsidiary. Development and support sit in Muscat. Local Payment Gateway.</p>
+                        <div class="mini-row">
+                            <div class="mini"><b>Registered</b><span>CR 1531388 · L3806610</span></div>
+                            <div class="mini"><b>Office</b><span>Golf Tower, Muscat Hills</span></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>NexAgent</h3>
+                        <p>More than 20 years of delivery, including Macy's, JCPenney, GAP, and OrangeShine.</p>
+                        <div class="mini-row">
+                            <div class="mini"><b>Payments</b><span>Local payment gateway provider</span></div>
+                            <div class="mini"><b>Controls</b><span>PDPL, PCI DSS, SOC 2</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Our approach">
+            <div class="content">
+                <p class="eyebrow">How we move</p>
+                <h2>Our approach</h2>
+                <div class="steps">
+                    <div class="card step"><div class="num">01</div><h3>Discover</h3><p>Map today's payments, files, and tickets.</p></div>
+                    <div class="card step"><div class="num">02</div><h3>Structure</h3><p>Connect a local payment gateway provider.</p></div>
+                    <div class="card step focus"><div class="num">03</div><h3>Design</h3><p>A clear screen for staff and residents.</p></div>
+                    <div class="card step"><div class="num">04</div><h3>Collect</h3><p>Turn on the gateway and Autopay.</p></div>
+                    <div class="card step"><div class="num">05</div><h3>Connect</h3><p>Add the building's devices when you are ready.</p></div>
+                </div>
+                <div class="note">Local compliance, a short go-live, and a team in Oman after launch.</div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Security">
+            <div class="content">
+                <p class="eyebrow">Trust</p>
+                <h2>Performance, security, and local reliability</h2>
+                <div class="secure">
+                    <div class="card">
+                        <h3>Local payment gateway provider</h3>
+                        <p>Card payments settle through a provider in Oman.</p>
+                    </div>
+                    <div class="card priority">
+                        <h3>Data governance</h3>
+                        <p>Roles, access, PCI DSS, SOC 2, and GDPR. Payments use a local payment gateway provider.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Secure payments</h3>
+                        <p>Encrypted sessions and a local card gateway.</p>
+                    </div>
+                    <div class="card">
+                        <h3>In-country support</h3>
+                        <p>A Muscat team for the building, around the clock.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Results">
+            <div class="content">
+                <p class="eyebrow">For the board</p>
+                <h2>What changes after the switch</h2>
+                <div class="quad">
+                    <div class="card priority"><div class="pill">01</div><h3>Collections</h3><p>Card payments and Autopay reduce late dues.</p></div>
+                    <div class="card priority"><div class="pill">02</div><h3>Files</h3><p>One categorized store instead of inboxes.</p></div>
+                    <div class="card"><div class="pill">03</div><h3>Oversight</h3><p>Roles, receipts, and an audit trail.</p></div>
+                    <div class="card priority"><div class="pill">04</div><h3>The tower</h3><p>Devices join the same platform later.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Contact">
+            <div class="content">
+                <p class="eyebrow">Next step</p>
+                <h2>Run Golf Tower from Muscat.</h2>
+                <p class="lede">Intelligence of the Era LLC will host, support, and extend the platform. NexAgent is the US parent.</p>
+                <div class="close-grid">
+                    <div class="close-brand">
+                        <div class="brand"><span class="mark"></span><b>NexAgent</b></div>
+                        <p>Property management · Payments · Documents · Smart building</p>
+                    </div>
+                    <div class="card contact">
+                        <h3>Intelligence of the Era LLC</h3>
+                        <p>CR: 1531388 · License: L3806610<br>A subsidiary of NexAgent (US)<br>South Al Mabilah / Al Seeb / Muscat<br>Office: Golf Tower, Muscat Hills<br>support@nexagent.ai · +968 9893 7667</p>
+                        <h3 style="margin-top:0.9rem;">NexAgent (US)</h3>
+                        <p>7210 Cumberland Pl, Rancho Cucamonga, CA 91739<br>support@nexagent.ai · +1 (310) 809-8581<br>www.nexagent.ai</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide" data-title="Live apps">
+            <div class="content">
+                <p class="eyebrow">See it live</p>
+                <h2>Golf Tower, running now.</h2>
+                <p class="lede">Open the staff workspace and the resident app. Both are the Golf Tower build.</p>
+                <div class="apps">
+                    <a class="card priority app-link" href="https://golf-tower-kpure.up.railway.app/dashboard" target="_blank" rel="noopener noreferrer">
+                        <span class="pill">Admin</span>
+                        <h3>Golf Tower admin app</h3>
+                        <p>Units, residents, payments, documents, and staff work.</p>
+                        <span class="url">golf-tower-kpure.up.railway.app/dashboard</span>
+                    </a>
+                    <a class="card priority app-link" href="https://golf-tower-resident-app-kpure.up.railway.app/" target="_blank" rel="noopener noreferrer">
+                        <span class="pill">Resident</span>
+                        <h3>Golf Tower resident app</h3>
+                        <p>Dues, notices, and the resident view of the building.</p>
+                        <span class="url">golf-tower-resident-app-kpure.up.railway.app</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="footer-bar">
+        <div id="status">1 / 11 — Cover</div>
+        <div class="nav-btns">
+            <button type="button" id="prev">← Prev</button>
+            <button type="button" id="next">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll('.slide'))
+        let index = 0
+
+        function show (i) {
+            index = Math.max(0, Math.min(slides.length - 1, i))
+            slides.forEach((slide, n) => slide.classList.toggle('active', n === index))
+            document.getElementById('status').textContent =
+                (index + 1) + ' / ' + slides.length + ' — ' + (slides[index].dataset.title || '')
+            document.getElementById('progress').style.width =
+                ((index + 1) / slides.length * 100) + '%'
+        }
+
+        document.getElementById('prev').addEventListener('click', () => show(index - 1))
+        document.getElementById('next').addEventListener('click', () => show(index + 1))
+
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowRight', 'PageDown', ' '].includes(e.key)) {
+                e.preventDefault()
+                show(index + 1)
+            }
+            if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) {
+                e.preventDefault()
+                show(index - 1)
+            }
+            if (e.key === 'Home') show(0)
+            if (e.key === 'End') show(slides.length - 1)
+        })
+
+        show(0)
+    </script>
+</body>
+</html>
