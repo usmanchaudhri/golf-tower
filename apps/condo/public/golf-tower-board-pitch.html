@@ -214,7 +214,7 @@
             grid-column: 1 / -1;
             grid-row: 2;
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 0.7rem;
             margin: 0 0.85rem 4.15rem;
         }
@@ -790,6 +790,25 @@
         .keep-slide .explain-viz { height: 52px; }
         .keep-slide h2 { margin-bottom: 0; }
 
+        .solutions-slide { padding-top: 0.55rem; }
+        .solutions-slide .explain-list { gap: 0.42rem; margin-top: 0.4rem; }
+        .solutions-slide .explain { padding: 0.58rem 0.9rem; }
+        .solutions-slide .explain-viz { height: 64px; }
+        .solutions-slide h2 { margin-bottom: 0; }
+        .solutions-slide .why {
+            margin: 0;
+            padding: 0;
+            display: grid;
+            gap: 0.16rem;
+        }
+        .solutions-slide .why li {
+            margin-left: 1.15rem;
+            font-size: 1.14rem;
+            font-weight: 650;
+            line-height: 1.35;
+            color: var(--ink);
+        }
+
         .explain-list {
             display: grid;
             gap: 0.7rem;
@@ -926,7 +945,7 @@
             .cover-layout { grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr) !important; grid-template-rows: minmax(0, 1fr) auto !important; }
             .cover-copy { grid-column: 1 !important; grid-row: 1 !important; }
             .cover-stage { grid-column: 2 !important; grid-row: 1 !important; min-height: 0 !important; }
-            .cover-values { grid-column: 1 / -1 !important; grid-row: 2 !important; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+            .cover-values { grid-column: 1 / -1 !important; grid-row: 2 !important; grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
             .display { max-width: 14ch !important; }
             .explain { grid-template-columns: 108px minmax(250px, 0.9fr) minmax(0, 1.5fr) !important; }
             .explain-steps { flex-wrap: nowrap !important; }
@@ -948,7 +967,7 @@
                         <div>
                             <p class="eyebrow">For the Golf Tower board</p>
                             <h1 class="display">Run efficient, <em>Live Great</em></h1>
-                            <p class="lede">Property management for Golf Tower. Rent, records, Autopay, and maintenance the board can see.</p>
+                            <p class="lede">Property management for Golf Tower. Rent, records, Autopay, maintenance, and governance the board can see.</p>
                         </div>
                     </div>
                 </div>
@@ -1022,6 +1041,20 @@
                         <h3>Maintenance monitoring</h3>
                         <p>Reported, in progress, done.</p>
                     </article>
+                    <article class="value">
+                        <div class="viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="10" width="30" height="28" rx="5" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="19" cy="20" r="4.2" fill="#1f4e8c"/>
+                                <path d="M11 34c1.2-5 4.6-7.2 8-7.2s6.8 2.2 8 7.2" fill="none" stroke="#1f4e8c" stroke-width="1.6" stroke-linecap="round"/>
+                                <rect x="40" y="12" width="34" height="24" rx="6" fill="#1f4e8c"/>
+                                <path d="M48 21h18M48 28h12" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="value-k">05</div>
+                        <h3>Governance</h3>
+                        <p>Roles in Muscat. Decisions stay in Oman.</p>
+                    </article>
                     <article class="value later">
                         <div class="viz" aria-hidden="true">
                             <svg viewBox="0 0 78 48">
@@ -1032,7 +1065,7 @@
                                 <path d="M60 9.5 v5.2 l3 1.8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
                             </svg>
                         </div>
-                        <div class="value-k">05 · Ahead</div>
+                        <div class="value-k">06 · Ahead</div>
                         <h3>Smart building</h3>
                         <p>Cameras, access, and meters — later.</p>
                     </article>
@@ -1040,7 +1073,7 @@
             </div>
         </section>
 
-        <section class="slide value-slide" data-title="The value">
+        <section class="slide value-slide solutions-slide" data-title="The value">
             <div class="content">
                 <p class="eyebrow">How it works</p>
                 <h2>Property Management Solutions</h2>
@@ -1058,14 +1091,10 @@
                         <div>
                             <div class="value-k">01</div>
                             <h3>On-time rent collection</h3>
-                            <p>Collected and still open, both visible.</p>
                         </div>
-                        <ol class="explain-steps">
-                            <li><b>Charge posted</b><span>On the unit.</span></li>
-                            <li class="go"><b>Due date</b><span>Runs that day.</span></li>
-                            <li class="go"><b>Collected</b><span>Cash is in.</span></li>
-                            <li class="wait"><b>Still open</b><span>Stays on the list.</span></li>
-                        </ol>
+                        <ul class="why">
+                            <li>Tenants pay by card, so rent is collected on the due date and anything still open stays listed.</li>
+                        </ul>
                     </article>
                     <article class="explain">
                         <div class="explain-viz" aria-hidden="true">
@@ -1080,14 +1109,10 @@
                         <div>
                             <div class="value-k">02</div>
                             <h3>Safe data storage</h3>
-                            <p>With the unit, not in an inbox.</p>
                         </div>
-                        <ol class="explain-steps">
-                            <li><b>Contract</b><span>On the unit.</span></li>
-                            <li><b>ID</b><span>Who owns it.</span></li>
-                            <li><b>Receipt</b><span>Proof of payment.</span></li>
-                            <li class="go"><b>Locked</b><span>Right roles only.</span></li>
-                        </ol>
+                        <ul class="why">
+                            <li>Contracts, IDs, and receipts are locked to the unit, and only the right role can open them.</li>
+                        </ul>
                     </article>
                     <article class="explain">
                         <div class="explain-viz" aria-hidden="true">
@@ -1103,14 +1128,10 @@
                         <div>
                             <div class="value-k">03</div>
                             <h3>Autopay</h3>
-                            <p>Enroll once. No monthly chase.</p>
                         </div>
-                        <ol class="explain-steps">
-                            <li><b>Enroll</b><span>Set in the app.</span></li>
-                            <li class="go"><b>Due date</b><span>No reminders.</span></li>
-                            <li class="go"><b>Card collected</b><span>Settled in Oman.</span></li>
-                            <li class="done"><b>Receipt</b><span>Stays on the unit.</span></li>
-                        </ol>
+                        <ul class="why">
+                            <li>A tenant enrolls once, and the card is collected on the due date through a provider in Oman.</li>
+                        </ul>
                     </article>
                     <article class="explain">
                         <div class="explain-viz" aria-hidden="true">
@@ -1127,13 +1148,28 @@
                         <div>
                             <div class="value-k">04</div>
                             <h3>Maintenance monitoring</h3>
-                            <p>An owner, and a status.</p>
                         </div>
-                        <ol class="explain-steps">
-                            <li class="wait"><b>Reported</b><span>Someone opens it.</span></li>
-                            <li class="work"><b>In progress</b><span>An owner is set.</span></li>
-                            <li class="done"><b>Done</b><span>Closed and kept.</span></li>
-                        </ol>
+                        <ul class="why">
+                            <li>A request is reported, assigned, and closed, so the board can see every job from open to done.</li>
+                        </ul>
+                    </article>
+                    <article class="explain focus">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48">
+                                <rect x="4" y="10" width="30" height="28" rx="5" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/>
+                                <circle cx="19" cy="20" r="4.2" fill="#1f4e8c"/>
+                                <path d="M11 34c1.2-5 4.6-7.2 8-7.2s6.8 2.2 8 7.2" fill="none" stroke="#1f4e8c" stroke-width="1.6" stroke-linecap="round"/>
+                                <rect x="40" y="12" width="34" height="24" rx="6" fill="#1f4e8c"/>
+                                <path d="M48 21h18M48 28h12" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="value-k">05</div>
+                            <h3>Governance</h3>
+                        </div>
+                        <ul class="why">
+                            <li>Roles decide who can act, every change stays on record, and the company and payment gateway sit in Oman.</li>
+                        </ul>
                     </article>
                     <article class="explain later">
                         <div class="explain-viz" aria-hidden="true">
@@ -1146,15 +1182,12 @@
                             </svg>
                         </div>
                         <div>
-                            <div class="value-k">05 · Ahead</div>
+                            <div class="value-k">06 · Ahead</div>
                             <h3>Smart building</h3>
-                            <p>Same platform, when you are ready.</p>
                         </div>
-                        <ol class="explain-steps">
-                            <li class="ahead"><b>Cameras</b><span>Common areas.</span></li>
-                            <li class="ahead"><b>Access</b><span>Who came in.</span></li>
-                            <li class="ahead"><b>Meters</b><span>One system.</span></li>
-                        </ol>
+                        <ul class="why">
+                            <li>Cameras, access, and meters join this same platform later, when the tower is ready, not as a second system on day one.</li>
+                        </ul>
                     </article>
                 </div>
             </div>
@@ -1589,9 +1622,78 @@
             </div>
         </section>
 
+        <section class="slide value-slide" data-title="Governance">
+            <div class="content">
+                <p class="eyebrow">05 · Governance</p>
+                <h2>Roles, records, and Oman.</h2>
+                <div class="explain-list">
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><circle cx="18" cy="16" r="6" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/><circle cx="34" cy="16" r="6" fill="#3b74e0"/><path d="M10 36c1.2-6 6-9 12-9h8c6 0 10.8 3 12 9" fill="none" stroke="#1f4e8c" stroke-width="1.8" stroke-linecap="round"/><rect x="50" y="12" width="22" height="24" rx="4" fill="#1f4e8c"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">01</div>
+                            <h3>Roles</h3>
+                            <p>Who can see, and who can act.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Staff</b><span>The daily work.</span></li>
+                            <li class="go"><b>Board</b><span>Oversight only.</span></li>
+                            <li><b>Resident</b><span>Their own unit.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="10" y="8" width="40" height="32" rx="6" fill="#fff" stroke="#1f4e8c" stroke-width="1.6"/><path d="M18 20h22M18 28h16" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/><circle cx="60" cy="24" r="8" fill="#1f4e8c"/><path d="M56.4 24.2 l2.4 2.4 4.6-5" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">02</div>
+                            <h3>Audit</h3>
+                            <p>Every change stays listed.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Who</b><span>A name on it.</span></li>
+                            <li><b>When</b><span>The time stays.</span></li>
+                            <li class="go"><b>What</b><span>Not deleted.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><rect x="8" y="10" width="28" height="28" rx="4" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6"/><path d="M14 20h16M14 27h12M14 34h14" stroke="#8eabd4" stroke-width="2" stroke-linecap="round"/><rect x="42" y="14" width="28" height="20" rx="5" fill="#3b74e0"/><path d="M50 24h12" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">03</div>
+                            <h3>Board</h3>
+                            <p>Decisions the board can see.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li><b>Approvals</b><span>On the record.</span></li>
+                            <li class="go"><b>Oversight</b><span>Not day-to-day.</span></li>
+                            <li><b>On file</b><span>Not in an inbox.</span></li>
+                        </ol>
+                    </article>
+                    <article class="explain focus">
+                        <div class="explain-viz" aria-hidden="true">
+                            <svg viewBox="0 0 78 48"><path d="M28 42 V18 l11-8 11 8 v24" fill="#e7eef8" stroke="#1f4e8c" stroke-width="1.6" stroke-linejoin="round"/><circle cx="58" cy="16" r="10" fill="#1f4e8c"/><path d="M58 11.2 v5.2" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="58" cy="20.4" r="1" fill="#fff"/></svg>
+                        </div>
+                        <div>
+                            <div class="value-k">04 · Oman</div>
+                            <h3>Local to Oman</h3>
+                            <p>The company and the gateway sit here.</p>
+                        </div>
+                        <ol class="explain-steps">
+                            <li class="go"><b>Muscat</b><span>Support in the tower.</span></li>
+                            <li class="go"><b>Gateway</b><span>Cards settle in Oman.</span></li>
+                            <li><b>Records</b><span>Roles stay with you.</span></li>
+                        </ol>
+                    </article>
+                </div>
+            </div>
+        </section>
+
         <section class="slide value-slide" data-title="Smart building">
             <div class="content">
-                <p class="eyebrow">05 · Ahead</p>
+                <p class="eyebrow">06 · Ahead</p>
                 <h2>Cameras, access, and meters — later.</h2>
                 <div class="explain-list">
                     <article class="explain later">
@@ -1744,7 +1846,7 @@
                 <div class="close-grid">
                     <div class="close-brand">
                         <div class="brand"><span class="mark"></span><b>NexAgent</b></div>
-                        <p>Property management · Payments · Documents · Smart building</p>
+                        <p>Property management · Payments · Governance · Smart building</p>
                     </div>
                     <div class="card contact">
                         <h3>Intelligence of the Era LLC</h3>
