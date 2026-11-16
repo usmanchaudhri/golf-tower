@@ -900,9 +900,15 @@
                 grid-template-columns: 1fr;
             }
             h1 { max-width: none; }
-            .cover-layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+            .cover-slide { overflow: auto; -webkit-overflow-scrolling: touch; }
+            .cover-layout {
+                height: auto;
+                min-height: 100%;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+            }
             .cover-copy, .cover-stage, .cover-values { grid-column: 1; }
-            .cover-stage { grid-row: 2; min-height: 220px; margin: 0 0.85rem; }
+            .cover-stage { grid-row: 2; height: 240px; min-height: 220px; margin: 0 0.85rem; }
             .cover-values { grid-row: 3; grid-template-columns: 1fr 1fr; }
             .display { max-width: none; }
             .explain { grid-template-columns: 1fr; }
