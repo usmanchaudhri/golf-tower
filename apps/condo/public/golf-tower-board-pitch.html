@@ -287,7 +287,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 36%;
+            object-position: center 62%;
         }
 
         .cover-stage figcaption {
@@ -790,6 +790,84 @@
         .keep-slide .explain-viz { height: 52px; }
         .keep-slide h2 { margin-bottom: 0; }
 
+        .compare-slide { padding-top: 0.55rem; }
+        .compare-slide h2 { margin-bottom: 0.1rem; }
+        .compare {
+            width: 100%;
+            margin-top: 0.65rem;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .compare th {
+            width: 50%;
+            text-align: left;
+            font-size: clamp(1.85rem, 2.5vw, 2.3rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            padding: 0.95rem 1.15rem;
+            border-bottom: 2px solid var(--line);
+        }
+        .compare th.adda {
+            color: #9a3412;
+            background: #fdf1ee;
+            border-right: 1px solid var(--line);
+        }
+        .compare th.home {
+            color: #176b46;
+            background: #e8f6ee;
+        }
+        .compare td {
+            vertical-align: top;
+            padding: 0.85rem 1rem;
+            border-top: 1px solid var(--line);
+        }
+        .compare td.adda {
+            background: #fff;
+            border-right: 1px solid var(--line);
+        }
+        .compare td.home { background: #f7fbf8; }
+        .compare tbody tr:nth-child(even) td.adda { background: #fffaf8; }
+        .compare tbody tr:nth-child(even) td.home { background: #f2f8f4; }
+        .compare .cell {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .compare .mark {
+            flex: 0 0 46px;
+            width: 46px;
+            height: 46px;
+        }
+        .compare .mark svg { width: 46px; height: 46px; display: block; }
+        .compare .cell b {
+            display: block;
+            margin-bottom: 0.12rem;
+            font-size: 1.14rem;
+            line-height: 1.2;
+            color: var(--ink);
+        }
+        .compare .cell span {
+            display: block;
+            font-size: 1.02rem;
+            line-height: 1.32;
+            font-weight: 650;
+            color: var(--muted);
+        }
+        .compare .sum {
+            display: block;
+            margin: 0.12rem 0 0.18rem;
+            font-size: 1.55rem;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            font-weight: 800;
+            color: #c83b3b;
+        }
+
         .solutions-slide { padding-top: 0.55rem; }
         .solutions-slide .explain-list { gap: 0.42rem; margin-top: 0.4rem; }
         .solutions-slide .explain { padding: 0.58rem 0.9rem; }
@@ -902,8 +980,10 @@
             h1 { max-width: none; }
             .cover-slide { overflow: auto; -webkit-overflow-scrolling: touch; }
             .cover-layout {
-                height: auto;
-                min-height: 100%;
+                align-self: start;
+                flex: 0 0 auto;
+                width: 100%;
+                height: max-content;
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto;
             }
@@ -913,6 +993,11 @@
             .display { max-width: none; }
             .explain { grid-template-columns: 1fr; }
             .explain-steps { flex-wrap: wrap; }
+            .compare th { font-size: 1.35rem; padding: 0.7rem 0.75rem; }
+            .compare td { padding: 0.65rem 0.7rem; }
+            .compare .mark,
+            .compare .mark svg { width: 34px; height: 34px; flex-basis: 34px; }
+            .compare .sum { font-size: 1.25rem; }
             .tower { height: 180px; }
         }
 
@@ -955,6 +1040,7 @@
             .display { max-width: 14ch !important; }
             .explain { grid-template-columns: 108px minmax(250px, 0.9fr) minmax(0, 1.5fr) !important; }
             .explain-steps { flex-wrap: nowrap !important; }
+            .compare { width: 100% !important; }
         }
     </style>
 </head>
@@ -978,7 +1064,7 @@
                     </div>
                 </div>
                 <figure class="cover-stage">
-                    <img src="pitch-assets/golf-tower/building.jpg" alt="Golf Tower at Muscat Hills, seen from the plaza" />
+                    <img src="pitch-assets/golf-tower/facade.jpg" alt="Golf Tower, the white residential block seen from the street" />
                     <figcaption>
                         <div>
                             <strong>Golf Tower</strong>
@@ -1079,10 +1165,108 @@
             </div>
         </section>
 
-        <section class="slide value-slide solutions-slide" data-title="The value">
+        <section class="slide value-slide compare-slide" data-title="ADDA vs home grown">
             <div class="content">
-                <p class="eyebrow">How it works</p>
-                <h2>Property Management Solutions</h2>
+                <p class="eyebrow">The difference</p>
+                <h2>ADDA vs Home Grown System</h2>
+                <table class="compare">
+                    <thead>
+                        <tr>
+                            <th class="adda" scope="col">ADDA</th>
+                            <th class="home" scope="col">Home Grown System</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="adda">
+                                <div class="cell">
+                                    <span class="mark no" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#d64545"/><path d="M16.5 16.5 l15 15 M31.5 16.5 l-15 15" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+                                    <div>
+                                        <b>On-time rent collection</b>
+                                        <strong class="sum">80,000 OMR</strong>
+                                        <span>Pending payments as of Nov 17. No payment gateway, so rent is not collected on the due date.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="home">
+                                <div class="cell">
+                                    <span class="mark yes" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#1f8a5b"/><path d="M14.5 24.5 l6.2 6.4 13-14.2" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                                    <div>
+                                        <b>On-time rent payment</b>
+                                        <span>Tenants pay by card, so rent is collected on the due date and anything still open stays listed.</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="adda">
+                                <div class="cell">
+                                    <span class="mark no" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#d64545"/><path d="M16.5 16.5 l15 15 M31.5 16.5 l-15 15" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+                                    <div>
+                                        <b>Autopay</b>
+                                        <span>Autopay is not connected.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="home">
+                                <div class="cell">
+                                    <span class="mark yes" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#1f8a5b"/><path d="M14.5 24.5 l6.2 6.4 13-14.2" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                                    <div>
+                                        <b>Autopay</b>
+                                        <span>A tenant enrolls once, and the card is collected on the due date through a provider in Oman.</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="adda">
+                                <div class="cell">
+                                    <span class="mark no" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#d64545"/><path d="M16.5 16.5 l15 15 M31.5 16.5 l-15 15" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+                                    <div>
+                                        <b>Safe data storage</b>
+                                        <span>Contracts, IDs, and receipts are not kept in a local store.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="home">
+                                <div class="cell">
+                                    <span class="mark yes" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#1f8a5b"/><path d="M14.5 24.5 l6.2 6.4 13-14.2" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                                    <div>
+                                        <b>Safe data storage</b>
+                                        <span>Contracts, IDs, and receipts are locked to the unit, and only the right role can open them.</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="adda">
+                                <div class="cell">
+                                    <span class="mark no" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#d64545"/><path d="M16.5 16.5 l15 15 M31.5 16.5 l-15 15" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+                                    <div>
+                                        <b>Smart building</b>
+                                        <span>No smart building to add later.</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="home">
+                                <div class="cell">
+                                    <span class="mark yes" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#1f8a5b"/><path d="M14.5 24.5 l6.2 6.4 13-14.2" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                                    <div>
+                                        <b>Smart building</b>
+                                        <span>Cameras, access, and meters join this same platform later, when the tower is ready.</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="slide value-slide solutions-slide" data-title="New features">
+            <div class="content">
+                <p class="eyebrow">Home Grown System</p>
+                <h2>New features</h2>
                 <div class="explain-list">
                     <article class="explain">
                         <div class="explain-viz" aria-hidden="true">
